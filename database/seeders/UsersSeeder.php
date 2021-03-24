@@ -24,6 +24,8 @@ class UsersSeeder extends Seeder
             $data = [
                 'username' => $faker->userName,
                 'password' => $faker->password,
+                'department_id' => $faker->randomDigit,
+                'jabatan_id' => $faker->randomDigit,
                 'nama' => $faker->name,
                 'alamat' => $faker->address,
                 'email' => $faker->email,
