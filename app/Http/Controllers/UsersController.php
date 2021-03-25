@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Users;
 use Illuminate\Http\Request;
 use App\Models\Department;
+use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
@@ -51,7 +52,7 @@ class UsersController extends Controller
 
         $data=[
             'username' => $request->input('username'),
-            'password' => $request->input('password'),
+            'password' => Hash::make('password'),
             'department_id' => $request->input('department_id'),
             'jabatan_id' => $request->input('jabatan_id'),
             'nama' => $request->input('nama'),
@@ -64,7 +65,7 @@ class UsersController extends Controller
 
         if ($users) {
             $result = [
-                'Code' => 200,
+                'code' => 200,
                 'message' => 'Success',
                 'data' => $data
             ];

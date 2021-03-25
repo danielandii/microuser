@@ -78,16 +78,29 @@ class JabatanController extends Controller
      * @param  \App\Models\Jabatan  $jabatan
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         //
-        $data = Jabatan::where('id',$id)->get();
+        //$jabatan = Jabatan::where('id',$id)->get();
+        $jabatan =  Jabatan::find($id);
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Tampilan data ke ',
-            'data' => $data
-            ]);
+        $data = Jabatan::where('id',$id)->get();
+        
+        if (!$jabatan) {
+            $result = [
+                "code" => 404,
+                "message" => "id not found"
+            ];
+        } else {
+            $jabatan->get();
+            $result = [
+                "code" => 200,
+                "message" => "success",
+                "data" => $data
+            ];
+        }
+
+        return response()->json($result);
     }
 
     /**
@@ -134,12 +147,29 @@ class JabatanController extends Controller
     public function destroy($id)
     {
         //
-        Jabatan::where('id',$id)->delete();
+        /*Jabatan::where('id',$id)->delete();
 
         return response()->json([
             'code' => 200,
             'message' => 'Success',
             'data' => ''
             ]);
+    }*/
+    $jabatan =  Jabatan::find($id);
+ 
+        if (!$jabatan) {
+            $data = [
+                "code" => 404,
+                "message" => "id not found"
+            ];
+        } else {
+            $jabatan->delete();
+            $data = [
+                "code" => 200,
+                "message" => "success_deleted"
+            ];
+        }
+ 
+        return response()->json($data);
     }
 }

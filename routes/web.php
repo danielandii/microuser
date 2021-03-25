@@ -52,4 +52,6 @@ $router->group( ['prefix' => 'api'], function() use ($router) {
     $router->put('jabatan/{id}',['uses' => 'JabatanController@update']);
 
     $router->post('jabatan',['uses' => 'JabatanController@create']);
+
+    /*Route::resource('jabatan', 'JabatanController');*/
 });
