@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Jabatan;
 use Illuminate\Http\Request;
+use Validator;
 
 class JabatanController extends Controller
 {
@@ -32,10 +33,42 @@ class JabatanController extends Controller
     public function create(Request $request)
     {
         //
-        $this->validate($request, [
+        $rules = [
+            'department_id' => 'required | numeric',
+            'nama' => 'required|string|unique:jabatans'
+        ];
+
+        $messages = [
+            'required'          => 'wajib diisi.',
+            'unique'            => 'sudah terdaftar.'           
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if($validator->fails()){
+            return response()->json([
+                'code' => 400,
+                'message' => 'Failed',
+                'data' => $validator->messages()
+            ], 400);
+        }
+        $jabatan           = new Jabatan;
+        $jabatan->department_id     = $request->department_id;
+        $jabatan->nama = $request->nama;
+        $jabatan->save();
+       
+        return response()->json([
+            'code' => 200,
+            'message' => 'Success',
+            'data' => $jabatan
+            ]);
+        /*$this->validate($request, [
             'department_id' => 'required',
             'nama' => 'required | unique:jabatans'
-        ]);
+        ],
+        [
+            'nama.unique' => 'nama sudah terdaftar, input nama lain'
+            ]);
 
         $data=[
             'department_id' => $request->input('department_id'),
@@ -58,7 +91,7 @@ class JabatanController extends Controller
             ];
         }
 
-        return response()->json($result);
+        return response()->json($result);*/
     }
 
     /**
@@ -78,7 +111,7 @@ class JabatanController extends Controller
      * @param  \App\Models\Jabatan  $jabatan
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $id)
+    public function show($id)
     {
         //
         //$jabatan = Jabatan::where('id',$id)->get();
@@ -89,7 +122,8 @@ class JabatanController extends Controller
         if (!$jabatan) {
             $result = [
                 "code" => 404,
-                "message" => "id not found"
+                "message" => "id not found",
+                'data' => ''
             ];
         } else {
             $jabatan->get();
@@ -132,9 +166,30 @@ class JabatanController extends Controller
 
         $jabatan = Jabatan::where('id', $id)->update($request->all());
 
+        $data =[
+            'department_id' => $request->input('department_id'),
+            'nama' => $request->input('nama')
+        ];
+
+        if (!$jabatan) {
+            $result = [
+                "code" => 404,
+                "message" => "id not found",
+                'data' => ''
+            ];
+        } else {
+            $jabatan->get();
+            $result = [
+                "code" => 200,
+                "message" => "success",
+                "data" => $data
+            ];
+        }
+
         return response()->json([
             'code' => 200,
-            'message' => 'Success'
+            'message' => 'Success',
+            'data' => $jabatan
             ]);
     }
 

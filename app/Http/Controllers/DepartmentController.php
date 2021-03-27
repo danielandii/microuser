@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Department;
 use Illuminate\Http\Request;
 use App\Models\Users;
+use Validator;
 
 class DepartmentController extends Controller
 {
@@ -58,7 +59,34 @@ class DepartmentController extends Controller
      */
     public function create(Request $request)
     {
-        $this->validate($request, [
+        $rules = [
+            'nama' => 'required|string|unique:departments'
+        ];
+
+        $messages = [
+            'required'          => 'wajib diisi.',
+            'unique'            => 'sudah terdaftar.'           
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if($validator->fails()){
+            return response()->json([
+                'code' => 400,
+                'message' => 'Failed',
+                'data' => $validator->messages()
+            ], 400);
+        }
+        $department           = new Department;
+        $department->nama = $request->nama;
+        $department->save();
+       
+        return response()->json([
+            'code' => 200,
+            'message' => 'Success',
+            'data' => $department
+            ]);
+        /*$this->validate($request, [
             'nama' => 'required | unique:departments'
         ]);
 
@@ -82,7 +110,7 @@ class DepartmentController extends Controller
             ];
         }
 
-        return response()->json($result);
+        return response()->json($result);*/
     }
 
     /**
@@ -104,13 +132,33 @@ class DepartmentController extends Controller
      */
     public function show($id)
     {
+        $department =  Department::find($id);
+
         $data = Department::where('id',$id)->get();
+        
+        if (!$department) {
+            $result = [
+                "code" => 404,
+                "message" => "id not found",
+                'data' => ''
+            ];
+        } else {
+            $department->get();
+            $result = [
+                "code" => 200,
+                "message" => "success",
+                "data" => $data
+            ];
+        }
+
+        return response()->json($result);
+        /*$data = Department::where('id',$id)->get();
 
         return response()->json([
             'status' => 200,
-            'message' => 'Tampilan data ke ',
+            'message' => 'success',
             'data' => $data
-            ]);
+            ]);*/
     }
 
     /**
@@ -159,12 +207,28 @@ class DepartmentController extends Controller
      */
     public function destroy($id)
     {
-        Department::where('id',$id)->delete();
+        $department =  Department::find($id);
+ 
+        if (!$department) {
+            $data = [
+                "code" => 404,
+                "message" => "id not found"
+            ];
+        } else {
+            $department->delete();
+            $data = [
+                "code" => 200,
+                "message" => "success_deleted"
+            ];
+        }
+ 
+        return response()->json($data);
+        /*Department::where('id',$id)->delete();
 
         return response()->json([
             'code' => 200,
             'message' => 'Success',
             'data' => ''
-            ]);
+            ]);*/
     }
 }
