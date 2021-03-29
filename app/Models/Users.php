@@ -17,4 +17,7 @@ class Users extends Model
     public function department(){
     	return $this->belongsTo('App\Models\department');
     }
+    public function jabatan(){
+    	return $this->belongsTo('App\Models\jabatan');
+    }
 }

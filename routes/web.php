@@ -17,6 +17,8 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
+//$router->get('login', ['uses' => 'LoginController@index'] );
+
 $router->group( ['prefix' => 'api'], function() use ($router) {
 
     $router->get('users', ['uses' => 'UsersController@index'] );

@@ -12,4 +12,8 @@ class Jabatan extends Model
     public function department(){
     	return $this->belongsTo('App\Models\department');
     }
+
+    public function Users(){
+    return $this->hasOne('App\Models\users');
+    }
 }

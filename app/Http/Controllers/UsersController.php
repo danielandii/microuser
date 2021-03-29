@@ -19,7 +19,7 @@ class UsersController extends Controller
     public function index()
     {
        
-        $data = Users::all();
+        $data = Users::with(['jabatan', 'department'])->get();
 
         return response()->json([
         'Code' => 200,
@@ -148,7 +148,10 @@ class UsersController extends Controller
     {
         $users =  Users::find($id);
 
-        $data = Users::where('id',$id)->get();
+        //$users['nama_jabatan'] = $users->jabatan->nama;
+        //$users['nama_department'] = $users->department->nama;
+    
+        $data = Users::with(['jabatan', 'department'])->where('id',$id)->get();
         
         if (!$users) {
             $result = [
