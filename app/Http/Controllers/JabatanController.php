@@ -158,8 +158,44 @@ class JabatanController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $jabatan =  Jabatan::find($id);
+            //$department->nama = $request->nama;
+            //$department->save();
 
-        $this->validate($request, [
+            if (!$jabatan) {
+                return response()->json([
+                    'code' => 404,
+                    'message' => 'id not found',
+                    'data' => '']);
+            }
+
+        $rules = [
+            'department_id' => 'required',
+            'nama' => 'required|string|unique:departments'
+        ];
+
+        $messages = [
+            'required'          => 'wajib diisi.',
+            'unique'            => 'sudah terdaftar.'           
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if($validator->fails()){
+            return response()->json([
+                'code' => 400,
+                'message' => 'Failed',
+                'data' => $validator->messages()
+            ], 400);
+        }
+            $jabatan->update($request->all());
+                
+                return response()->json([
+                    'code' => 200,
+                    'message' => 'Success',
+                    'data' => $jabatan
+                    ]);
+        /*$this->validate($request, [
             'department_id' => 'required',
             'nama' => 'required | unique:jabatans'
         ]);
@@ -190,7 +226,7 @@ class JabatanController extends Controller
             'code' => 200,
             'message' => 'Success',
             'data' => $jabatan
-            ]);
+            ]);*/
     }
 
     /**

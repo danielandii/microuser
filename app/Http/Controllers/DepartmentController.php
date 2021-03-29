@@ -180,10 +180,50 @@ class DepartmentController extends Controller
      * @param  \App\Models\Department  $department
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($id, Request $request)
     {
+        $department =  Department::find($id);
+            //$department->nama = $request->nama;
+            //$department->save();
+
+            if (!$department) {
+                return response()->json([
+                    'code' => 404,
+                    'message' => 'id not found',
+                    'data' => '']);
+            }
+
+        $rules = [
+            'nama' => 'required|string|unique:departments'
+        ];
+
+        $messages = [
+            'required'          => 'wajib diisi.',
+            'unique'            => 'sudah terdaftar.'           
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if($validator->fails()){
+            return response()->json([
+                'code' => 400,
+                'message' => 'Failed',
+                'data' => $validator->messages()
+            ], 400);
+        }
+            $department->update($request->all());
+                
+                return response()->json([
+                    'code' => 200,
+                    'message' => 'Success',
+                    'data' => $department
+                    ]);
         
-        $this->validate($request, [
+        
+
+        
+
+        /*$this->validate($request, [
             'nama' => 'required | unique:departments'
         ]);
 
@@ -196,7 +236,7 @@ class DepartmentController extends Controller
         return response()->json([
             'code' => 200,
             'message' => 'Success'
-            ]);
+            ]);*/
     }
 
     /**

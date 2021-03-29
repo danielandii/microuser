@@ -188,7 +188,63 @@ class UsersController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $this->validate($request, [
+        $users =  Users::find($id);
+        //$department->nama = $request->nama;
+        //$department->save();
+
+        if (!$users) {
+            return response()->json([
+                'code' => 404,
+                'message' => 'id not found',
+                'data' => '']);
+        }
+
+        $rules = [
+            'username' => 'required | unique:users',
+            'password' => 'required | min:6',
+            'department_id' => 'required | numeric',
+            'jabatan_id' => 'required | numeric',
+            'nama' => 'required',
+            'alamat' => 'required',
+            'email' => 'required|unique:users|email:rfc,dns',
+            'telp' => 'required|unique:users|numeric'
+        ];
+
+        $messages = [
+            'required'          => 'wajib diisi.',
+            'unique'            => 'sudah terdaftar.',
+            'password.min'      => 'Password minimal diisi dengan 6 karakter.',
+            'email.email'       => 'Email tidak valid.'           
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+        
+
+        if($validator->fails()){
+            return response()->json([
+                'code' => 400,
+                'message' => 'Failed',
+                'data' => $validator->messages()
+            ], 400);
+        }
+        
+        $users->username = $request->username;
+        $users->password = Hash::make($request->password);
+        $users->department_id     = $request->department_id;
+        $users->jabatan_id = $request->jabatan_id;
+        $users->nama = $request->nama;
+        $users->alamat = $request->alamat;
+        $users->email    = $request->email;
+        $users->telp = $request->telp;
+        $users->update($request->all());
+        //$department->save();
+       
+        return response()->json([
+            'code' => 200,
+            'message' => 'Success',
+            'data' => $users
+            ]);
+        /*$this->validate($request, [
             'username' => 'required | unique:users',
             'password' => 'required',
             'department_id' => 'required | numeric',
@@ -209,7 +265,7 @@ class UsersController extends Controller
         return response()->json([
             'code' => 200,
             'message' => 'Success'
-            ]);
+            ]);*/
     }
 
     /**
