@@ -228,15 +228,24 @@ class UsersController extends Controller
             ], 400);
         }
         
-        $users->username = $request->username;
+        /*$users->username = $request->username;
         $users->password = Hash::make($request->password);
         $users->department_id     = $request->department_id;
         $users->jabatan_id = $request->jabatan_id;
         $users->nama = $request->nama;
         $users->alamat = $request->alamat;
         $users->email    = $request->email;
-        $users->telp = $request->telp;
-        $users->update($request->all());
+        $users->telp = $request->telp;*/
+        $users->update([
+            $users->username = $request->username,
+            $users->password = Hash::make($request->password),
+            $users->department_id     = $request->department_id,
+            $users->jabatan_id = $request->jabatan_id,
+            $users->nama = $request->nama,
+            $users->alamat = $request->alamat,
+            $users->email    = $request->email,
+            $users->telp = $request->telp,
+        ]);
         //$department->save();
        
         return response()->json([
