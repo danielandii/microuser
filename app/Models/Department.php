@@ -10,11 +10,11 @@ class Department extends Model
 
     protected $fillable = ['nama'];
 
-    public function users(){
+    public function Users(){
         return $this->hasMany('App\Models\Users');
     }
 
-    public function jabatan(){
+    public function Jabatan(){
         return $this->hasMany('App\Models\Jabatan');
     }
 }

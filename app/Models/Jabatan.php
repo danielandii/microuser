@@ -9,11 +9,11 @@ class Jabatan extends Model
     //
     protected $fillable = ['department_id', 'nama'];
 
-    public function department(){
-    	return $this->belongsTo('App\Models\department');
+    public function Department(){
+    	return $this->belongsTo('App\Models\Department');
     }
 
     public function Users(){
-    return $this->hasOne('App\Models\users');
+    return $this->hasOne('App\Models\Users');
     }
 }

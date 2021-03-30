@@ -15,9 +15,9 @@ class Users extends Model
     ];
 
     public function department(){
-    	return $this->belongsTo('App\Models\department');
+    	return $this->belongsTo('App\Models\Department');
     }
     public function jabatan(){
-    	return $this->belongsTo('App\Models\jabatan');
+    	return $this->belongsTo('App\Models\Jabatan');
     }
 }

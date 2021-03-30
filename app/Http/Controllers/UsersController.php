@@ -18,13 +18,15 @@ class UsersController extends Controller
      */
     public function index()
     {
-       
-        $data = Users::with(['jabatan', 'department'])->get();
+        $users = Users::get();
+        $users['jabatan_id'] = $users->jabatan->nama;
+        $users['department_id'] = $users->department->nama;
+        
 
         return response()->json([
-        'Code' => 200,
+        'code' => 200,
         'message' => 'Success',
-        'data' => $data
+        'data' => $users
         ]);
     }
 
@@ -65,8 +67,8 @@ class UsersController extends Controller
         $users           = new Users;
         $users->username = $request->username;
         $users->password = Hash::make($request->password);
-        $users->department_id     = $request->department_id;
-        $users->jabatan_id = $request->jabatan_id;
+        $users->department_id     = $request->department_id->department->nama;
+        $users->jabatan_id = $request->jabatan_id->jabatan->nama;
         $users->nama = $request->nama;
         $users->alamat = $request->alamat;
         $users->email    = $request->email;
@@ -148,10 +150,11 @@ class UsersController extends Controller
     {
         $users =  Users::find($id);
 
-        //$users['nama_jabatan'] = $users->jabatan->nama;
-        //$users['nama_department'] = $users->department->nama;
-    
-        $data = Users::with(['jabatan', 'department'])->where('id',$id)->get();
+        $users['jabatan_id'] = $users->jabatan->nama;
+        $users['department_id'] = $users->department->nama;
+        
+
+        //$data = Users::where('id',$id)->get();
         
         if (!$users) {
             $result = [
@@ -164,7 +167,7 @@ class UsersController extends Controller
             $result = [
                 "code" => 200,
                 "message" => "success",
-                "data" => $data
+                "data" => $users
             ];
         }
 
