@@ -8,7 +8,7 @@ class Users extends Model
 {
     //
 
-    protected $fillable = ['username','password', 'department_id', 'jabatan_id', 'nama', 'alamat', 'email', 'telp'];
+protected $fillable = ['username','password', 'department_id', 'jabatan_id', 'nama', 'alamat', 'email', 'telp', 'api_token'];
 
     protected $hidden = [
         'password',

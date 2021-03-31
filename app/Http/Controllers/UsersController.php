@@ -18,11 +18,22 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = Users::get();
-        $users['jabatan_id'] = $users->jabatan->nama;
-        $users['department_id'] = $users->department->nama;
+        $users = Users::all();
+        // $users['jabatan_id'] = $users->jabatan->nama;
+        // $users['department_id'] = $users->department->nama;
         
+        // if ($users->get()) {
+        //     $users['jabatan_id'] = $users->jabatan->nama;
+        //     $users['department_id'] = $users->department->nama;
+        //     $result = [
+        //         "code" => 200,
+        //         "message" => "success",
+        //         "data" => $users
+        //     ];
+        // }
 
+        // return response()->json($result);
+        
         return response()->json([
         'code' => 200,
         'message' => 'Success',
