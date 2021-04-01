@@ -23,7 +23,6 @@ class CreateUsersTable extends Migration
             $table->string('alamat');
             $table->string('email');
             $table->string('telp');
-            $table->string('api_token');
             $table->timestamps();
         });
         

@@ -18,7 +18,8 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = Users::all();
+        $users = Users::with(['jabatan:nama', 'department:nama'])->get();
+        // echo $users->nama;
         // $users['jabatan_id'] = $users->jabatan->nama;
         // $users['department_id'] = $users->department->nama;
         
@@ -159,10 +160,7 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        $users =  Users::find($id);
-
-        $users['jabatan_id'] = $users->jabatan->nama;
-        $users['department_id'] = $users->department->nama;
+        $users =  Users::with(['jabatan:nama', 'department:nama'])->find($id);
         
 
         //$data = Users::where('id',$id)->get();
