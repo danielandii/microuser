@@ -78,8 +78,8 @@ class UsersController extends Controller
         $users           = new Users;
         $users->username = $request->username;
         $users->password = Hash::make($request->password);
-        $users->department_id     = $request->department_id->department->nama;
-        $users->jabatan_id = $request->jabatan_id->jabatan->nama;
+        $users->department_id     = $request->department_id;
+        $users->jabatan_id = $request->jabatan_id;
         $users->nama = $request->nama;
         $users->alamat = $request->alamat;
         $users->email    = $request->email;
