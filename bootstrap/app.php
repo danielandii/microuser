@@ -23,6 +23,10 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
+// $app = new \Dusterio\LumenPassport\Lumen7Application(
+//     dirname(__DIR__)
+// );
+
 $app->withFacades();
 
 $app->withEloquent();
@@ -48,7 +52,7 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
-$app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
+
 
 /*
 |--------------------------------------------------------------------------
@@ -61,7 +65,7 @@ $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 |
 */
 
-$app->configure('app');
+$app->configure('auth');
 
 /*
 |--------------------------------------------------------------------------
@@ -94,9 +98,14 @@ $app->routeMiddleware([
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
+$app->register(App\Providers\EventServiceProvider::class);
+
+$app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
+$app->register(Laravel\Passport\PassportServiceProvider::class);
+$app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
+
 
 /*
 |--------------------------------------------------------------------------
@@ -108,6 +117,8 @@ $app->register(App\Providers\AuthServiceProvider::class);
 | can respond to, as well as the controllers that may handle them.
 |
 */
+
+\Dusterio\LumenPassport\LumenPassport::routes($app, ['prefix' => 'v1/oauth']);
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',

@@ -18,10 +18,16 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = Users::with(['jabatan:nama', 'department:nama'])->get();
+        // $users = Users::all();
+        $users = Users  ::with(['jabatan' => function($q) {
+            $q->select('id', 'nama');
+        }])
+        ->with(['department' => function($q) {
+            $q->select('id', 'nama');
+        }])->get(['id', 'username', 'alamat', 'email', 'telp', 'jabatan_id', 'department_id', 'nama']);
         // echo $users->nama;
-        // $users['jabatan_id'] = $users->jabatan->nama;
-        // $users['department_id'] = $users->department->nama;
+        // $users['jabatan_nama'] = $users->jabatan->nama;
+        // $users['department_nama'] = $users->department->nama;
         
         // if ($users->get()) {
         //     $users['jabatan_id'] = $users->jabatan->nama;
@@ -160,9 +166,10 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        $users =  Users::with(['jabatan:nama', 'department:nama'])->find($id);
+        $users =  Users::find($id);
         
-
+        $users['jabatan_nama'] = $users->jabatan->nama;
+        $users['department_nama'] = $users->department->nama;
         //$data = Users::where('id',$id)->get();
         
         if (!$users) {

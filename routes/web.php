@@ -17,45 +17,51 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->post('api/register', ['uses' => 'LoginController@register'] );
 
-$router->post('api/login', ['uses' => 'LoginController@login'] );
+$router->group( ['prefix' => 'api'], function() use ($router) {
 
-$router->group( ['prefix' => 'api', 'middleware'=>'auth'], function() use ($router) {
+    $router->post('register', ['uses' => 'LoginController@register'] );
+    $router->post('login', ['uses' => 'LoginController@login'] );
 
-    $router->get('users', ['uses' => 'UsersController@index'] );
 
-    $router->get('users/{id}', ['uses' => 'UsersController@show']);
+    $router->group( ['middleware' => 'auth'], function() use ($router) {
+
+        $router->post('logout', ['uses' => 'LoginController@logout'] );
+
+        $router->get('users', ['uses' => 'UsersController@index'] );
+
+        $router->get('users/{id}', ['uses' => 'UsersController@show']);
     
-    $router->delete('users/{id}',['uses' => 'UsersController@destroy']);
+        $router->delete('users/{id}',['uses' => 'UsersController@destroy']);
     
-    $router->put('users/{id}',['uses' => 'UsersController@update']);
+        $router->put('users/{id}',['uses' => 'UsersController@update']);
     
-    $router->post('users',['uses' => 'UsersController@create']);
+        $router->post('users',['uses' => 'UsersController@create']);
 
-    $router->get('department', ['uses' => 'DepartmentController@index'] );
+        $router->get('department', ['uses' => 'DepartmentController@index'] );
 
-    $router->get('getDepartmentUsers/{id}', ['uses' => 'DepartmentController@getDepartmentUsers'] );
+        $router->get('getDepartmentUsers/{id}', ['uses' => 'DepartmentController@getDepartmentUsers'] );
 
-    $router->get('getDepartmentJabatan/{id}', ['uses' => 'DepartmentController@getDepartmentJabatan'] );
+        $router->get('getDepartmentJabatan/{id}', ['uses' => 'DepartmentController@getDepartmentJabatan'] );
 
-    $router->get('department/{id}', ['uses' => 'DepartmentController@show']);
+        $router->get('department/{id}', ['uses' => 'DepartmentController@show']);
     
-    $router->delete('department/{id}',['uses' => 'DepartmentController@destroy']);
+        $router->delete('department/{id}',['uses' => 'DepartmentController@destroy']);
     
-    $router->put('department/{id}',['uses' => 'DepartmentController@update']);
+        $router->put('department/{id}',['uses' => 'DepartmentController@update']);
     
-    $router->post('department',['uses' => 'DepartmentController@create']);
+        $router->post('department',['uses' => 'DepartmentController@create']);
 
-    $router->get('jabatan', ['uses' => 'JabatanController@index'] );
+        $router->get('jabatan', ['uses' => 'JabatanController@index'] );
 
-    $router->get('jabatan/{id}', ['uses' => 'JabatanController@show']);
+        $router->get('jabatan/{id}', ['uses' => 'JabatanController@show']);
 
-    $router->delete('jabatan/{id}',['uses' => 'JabatanController@destroy']);
+        $router->delete('jabatan/{id}',['uses' => 'JabatanController@destroy']);
 
-    $router->put('jabatan/{id}',['uses' => 'JabatanController@update']);
+        $router->put('jabatan/{id}',['uses' => 'JabatanController@update']);
 
-    $router->post('jabatan',['uses' => 'JabatanController@create']);
+        $router->post('jabatan',['uses' => 'JabatanController@create']);
 
     /*Route::resource('jabatan', 'JabatanController');*/
+    });
 });

@@ -16,12 +16,18 @@ class JabatanController extends Controller
     public function index()
     {
         //
-        $data = Jabatan::all();
+        $jabatan = Jabatan::all();
+
+        // $jabatan['department_nama'] = $jabatan->department->nama;
+
+        $jabatan = Jabatan  ::with(['department' => function($q) {
+            $q->select('id', 'nama');
+        }])->get(['id', 'department_id', 'nama']);
 
         return response()->json([
         'Code' => 200,
         'message' => 'Success',
-        'data' => $data
+        'data' => $jabatan
         ]);
     }
 
@@ -117,7 +123,10 @@ class JabatanController extends Controller
         //$jabatan = Jabatan::where('id',$id)->get();
         $jabatan =  Jabatan::find($id);
 
-        $data = Jabatan::where('id',$id)->get();
+        // $users['jabatan_nama'] = $users->jabatan->nama;
+        $jabatan['department_nama'] = $jabatan->department->nama;
+
+        // $data = Jabatan::where('id',$id)->get();
         
         if (!$jabatan) {
             $result = [
@@ -130,7 +139,7 @@ class JabatanController extends Controller
             $result = [
                 "code" => 200,
                 "message" => "success",
-                "data" => $data
+                "data" => $jabatan
             ];
         }
 

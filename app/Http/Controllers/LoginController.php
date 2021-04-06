@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Users;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\BadResponseException;
 use Validator;
 
 class LoginController extends Controller
@@ -63,34 +65,63 @@ class LoginController extends Controller
         $users->telp = $request->telp;
         $users->save();
 
+        // $response = $users->createToken('users')->accessToken;
+
         return response()->json([
             'code' => 200,
             'message' => 'success',
             'data' => $users
+            // 'token' => $response
             ]);
     
     }
 
     public function login(Request $request)
     {
+        // $username = $request->username;
+        // $password = $request->password;
+
+        // // check if field is not empty
+        // if(empty($username) OR empty($password)) {
+        //     return response()->json([
+        //                 'code' => 400,
+        //                 'message' => 'Failed'
+        //             ]);
+        // }
+
+        // $client = new Client();
+
+        // try {
+        //     return $client->post('http://lumen-rest-api.test/v1/oauth/token', [
+        //         "form_params" => [
+        //             "client_secret" => "8Edy0KHCp2UWbpoCuKXsJaKwR7O6ZE3qu3SoLpRq",
+        //             "grant_type" => "password",
+        //             "client_id" => 2,
+        //             "username" => $request->username,
+        //             "password" => $request->password
+        //         ]
+        //     ]);
+        // } catch (BadResponseException $e) {
+        //     return response()->json([
+        //         'code' => 400,
+        //         'message' => $e->getMessage()
+        //     ]);
+        // }
+
             $username = $request->input('username');
             $password = $request->input('password');
 
             $users = Users::where('username', $username)->first();
 
             if (Hash::check($password, $users->password)) {
-                $token = Str::random(10);
-
-                $users->update([
-                    'api_token' => $token
-                ]);
+                $token = $users->createToken('users')->accessToken;
 
                 return response()->json([
                     'code' => 200,
                     'message' => 'Login success',
                     'data' => [
                         'users' => $users,
-                        'api_token' => $token
+                        'token' => $token
                     ]
                 ]);
             }else{
@@ -100,5 +131,36 @@ class LoginController extends Controller
                     'data' => ''
                 ]);
             }
+    }
+    public function logout(Request $request)
+    {
+        // if (Users::check()) {
+        //     Users::users()->token()->revoke();
+        //     return response()->json(['success' =>'logout_success'],200); 
+        // }else{
+        //     return response()->json(['error' =>'api.something_went_wrong'], 500);
+        // }
+        try {
+            auth()->users()->tokens()->each(function ($token){
+                            $token->delete();
+                        });
+            
+        return response()->json([
+                            'code' => 200,
+                            'message' => 'success'
+                        ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 401,
+                'message' => $e->getMessage()
+            ]);
+        }
+    //     try {
+    //         auth()->users()->tokens()->each(function ($token){
+    //             $token->delete();
+    //         });
+
+    //         return response()->json($data, 200, $headers);
+    //     }
     }
 }
