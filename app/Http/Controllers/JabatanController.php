@@ -124,7 +124,7 @@ class JabatanController extends Controller
         $jabatan =  Jabatan::find($id);
 
         // $users['jabatan_nama'] = $users->jabatan->nama;
-        $jabatan['department_nama'] = $jabatan->department->nama;
+        
 
         // $data = Jabatan::where('id',$id)->get();
         
@@ -135,7 +135,7 @@ class JabatanController extends Controller
                 'data' => ''
             ];
         } else {
-            $jabatan->get();
+            $jabatan['department_nama'] = @$jabatan->department->nama;
             $result = [
                 "code" => 200,
                 "message" => "success",

@@ -167,19 +167,17 @@ class UsersController extends Controller
     public function show($id)
     {
         $users =  Users::find($id);
-        
-        $users['jabatan_nama'] = $users->jabatan->nama;
-        $users['department_nama'] = $users->department->nama;
         //$data = Users::where('id',$id)->get();
         
         if (!$users) {
             $result = [
                 "code" => 404,
                 "message" => "id not found",
-                'data' => ''
+                "data" => ''
             ];
         } else {
-            $users->get();
+            $users['jabatan_nama'] = @$users->jabatan->nama;
+            $users['department_nama'] = @$users->department->nama;
             $result = [
                 "code" => 200,
                 "message" => "success",
